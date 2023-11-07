@@ -4,11 +4,11 @@
   "description": "unique chat room, justa put you username and enter. It using socket.io to realtime connection",
   "main": "index.js",
   "scripts": {
-    "test": "any"
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
-    "url": "any"
+    "url": "https://github.com/zaiaaa/chat"
   },
   "keywords": [
     "chat"
