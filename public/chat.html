@@ -15,7 +15,7 @@
         }   
         #list-message{
             background-color: rgb(252, 0, 0);
-            width: 200px;
+            width: 400px;
             height: 500px;
             display: flex;
             flex-direction: column;
@@ -79,6 +79,8 @@
                 sendDate: sendDate
             })
 
+            value = ''
+
         })
         
         socket.on('messages', (data) => {
@@ -93,7 +95,22 @@
             // const message = `<li></li>`
 
             listMessage.innerHTML = messages.join('<br>')
+            scrollToBottom()
         })
+
+                // Função para rolar para o final do contêiner
+        function scrollToBottom() {
+        listMessage.scrollTop = listMessage.scrollHeight;
+        }
+
+        // Exemplo de adição de uma nova mensagem ao chat
+        function addNewMessage(message) {
+        const newMessage = document.createElement('div');
+        newMessage.textContent = message;
+        chatContainer.appendChild(newMessage);
+        scrollToBottom(); // Role para o final após adicionar a nova mensagem
+        }
+
 
 
     </script>
