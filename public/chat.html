@@ -4,10 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .mes{
+            background-color: aqua;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }   
+        #list-message{
+            background-color: rgb(252, 0, 0);
+            width: 200px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        #list-message li{
+            list-style: none;
+        }
+        .other{
+            text-align: end;
+        }
+    </style>
 </head>
 <body>
-    <h1>oiiiiiii</h1>
+    <h2 id="header"></h2>
 
-    
+    <input type="text" placeholder="messages" id="input">
+    <button type="button" id="sendMessage">Send</button>
+
+    <div id="messages" class="mes">
+        <ul id="list-message">
+            <li>Zaia - Olá</li>
+            <li>Pedro - Oi</li>
+        </ul>
+        <h3>2023</h3>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io()
+        const header = document.getElementById('header')
+        const btnMessage = document.getElementById('sendMessage')
+        const input = document.getElementById("input")
+        const date = new Date()
+        const listMessage = document.getElementById("list-message")
+
+        const ano = date.getFullYear(); // Obtém o ano (ex: 2023)
+        const mes = date.getMonth();    // Obtém o mês (0 a 11, onde 0 = janeiro, 1 = fevereiro, etc.)
+        const dia = date.getDate();      // Obtém o dia do mês (1 a 31)
+        const hora = date.getHours();    // Obtém a hora (0 a 23)
+        const minuto = date.getMinutes(); // Obtém os minutos (0 a 59)
+        const segundo = date.getSeconds(); // Obtém os segundos (0 a 59)
+
+
+        
+        const sendDate = `${ano}-${mes + 1}-${dia} ${hora}:${minuto}:${segundo}`
+
+        const urlSearch = new URLSearchParams(window.location.search)
+        const username = urlSearch.get('name')
+        socket.emit('username_conn', username)
+        header.innerHTML = `Hello user ${username}`
+
+        btnMessage.addEventListener('click', (e) => {
+            e.preventDefault()
+            const value = input.value
+
+            socket.emit("sendMessage", {
+                content: value,
+                user: username,
+                sendDate: sendDate
+            })
+
+        })
+        
+        socket.on('messages', (data) => {
+            const ownMessages = data.filter(item => item.user === username)
+            const otherMessages = data.filter(item => item.user !== username)
+
+
+            const messages = data.map(item => `<li class="${item.user == username ? "my" : "other"}">${item.user} - ${item.content}</li>`)
+
+            // ownMessages.map(item => `<li class="my">${item.user} - ${item.content}</li>`)
+
+            // const message = `<li></li>`
+
+            listMessage.innerHTML = messages.join('<br>')
+        })
+
+
+    </script>
 </body>
 </html>
