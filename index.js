@@ -4,7 +4,6 @@ const app = express()
 const { Server } = require('socket.io')
 
 const { createServer } = require('http')
-const port = 3000
 const { join } = require('node:path') 
 const server = createServer(app)
 const io = new Server(server)
@@ -51,7 +50,7 @@ io.on('connection', (socket) => {
 })
 
 
-server.listen(port, () => {
+server.listen(proccess.env.PORT ?? 3000, () => {
     console.log('rodando na porta 3000')
 })
 
