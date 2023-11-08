@@ -24,17 +24,10 @@ app.get('/chat.html', (req, res) => {
     res.sendFile(join(__dirname, 'public', 'chat.html'))  
 })
 
-io.on('connection', (socket) => {    
-    function refreshMessages(){
-        controller.list().then((response) => {
-            socket.emit('messages', response)
-        })
-    }
-    refreshMessages()
-    
-    
+io.on('connection', (socket) => {        
     socket.on('username_conn', (user) => {
         console.log(`user ${user} Online`)
+        refreshMessages()
     })
     socket.on('sendMessage', (data) => {
         const sql = `INSERT INTO message(content, user, sendDate) VALUES('${data.content}', '${data.user}', '${data.sendDate}')`
@@ -44,9 +37,19 @@ io.on('connection', (socket) => {
                 return
             }
             console.log('inclusao feita')
+            socket.broadcast.emit(refreshMessages())
             refreshMessages()
         })
     })
+    function refreshMessages(){
+        controller.list().then((response) => {
+            socket.emit('messages', response)
+        })
+    }
+    refreshMessages()
+
+    
+
 })
 
 

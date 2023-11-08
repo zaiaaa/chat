@@ -98,17 +98,24 @@
             scrollToBottom()
         })
 
+        socket.on('newMessage', (data) => {
+            const ownMessages = data.filter(item => item.user === username)
+            const otherMessages = data.filter(item => item.user !== username)
+
+
+            const messages = data.map(item => `<li class="${item.user == username ? "my" : "other"}">${item.user} - ${item.content}</li>`)
+
+            // ownMessages.map(item => `<li class="my">${item.user} - ${item.content}</li>`)
+
+            // const message = `<li></li>`
+
+            listMessage.innerHTML = messages.join('<br>')
+            scrollToBottom()
+        })
+
                 // Função para rolar para o final do contêiner
         function scrollToBottom() {
         listMessage.scrollTop = listMessage.scrollHeight;
-        }
-
-        // Exemplo de adição de uma nova mensagem ao chat
-        function addNewMessage(message) {
-        const newMessage = document.createElement('div');
-        newMessage.textContent = message;
-        chatContainer.appendChild(newMessage);
-        scrollToBottom(); // Role para o final após adicionar a nova mensagem
         }
 
 
