@@ -4,7 +4,7 @@ const app = express()
 const { Server } = require('socket.io')
 
 const { createServer } = require('http')
-const { join } = require('node:path') 
+const { join } = require('path') 
 const server = createServer(app)
 const io = new Server(server)
 
